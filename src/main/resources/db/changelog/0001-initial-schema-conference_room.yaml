@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0001
+      author: anup
+      changes:
+        - createTable:
+            tableName: conference_room
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: location
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: max_capacity
+                  type: INT
+                  constraints:
+                    nullable: false

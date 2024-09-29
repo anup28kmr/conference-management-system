@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - include:
+      file: 0001-initial-schema-conference_room.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: 0002-initial-schema-conference.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: 0003-initial-schema-participant.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: 0004-initial-schema-feedback.yaml
+      relativeToChangelogFile: true

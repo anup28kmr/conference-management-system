@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0002
+      author: anup
+      changes:
+        - createTable:
+            tableName: conference
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: conference_room_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: date_time
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: max_participants
+                  type: INT
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: conference
+            baseColumnNames: conference_room_id
+            constraintName: fk_conference_room
+            referencedTableName: conference_room
+            referencedColumnNames: id
