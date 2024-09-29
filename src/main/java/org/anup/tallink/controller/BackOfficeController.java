@@ -51,6 +51,6 @@ public class BackOfficeController {
     @PutMapping("/{conferenceId}")
     public ResponseEntity<ConferenceRoomDto> updateConference(@PathVariable Long conferenceId, @Valid @RequestBody UpdateConferenceDto conferenceDto) {
         ConferenceRoomDto savedRoom = conferenceService.updateConference(conferenceId, conferenceDto);
-        return new ResponseEntity<>(savedRoom, HttpStatus.CREATED);
+        return new ResponseEntity<>(savedRoom, HttpStatus.OK);
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -15,4 +16,8 @@ public interface ParticipantRepository extends JpaRepository<Participant, Long> 
     long countParticipantsByConferenceId(@Param("conferenceId") Long conferenceId);
 
     Optional<Participant> findByUniqueCode(String uniqueCode);
+
+    long countByConferenceId(Long conferenceId);
+
+    List<Participant> findByConferenceId(Long conferenceRoomId);
 }

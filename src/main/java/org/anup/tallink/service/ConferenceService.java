@@ -5,18 +5,17 @@ import org.anup.tallink.dto.AvailableConferenceDto;
 import org.anup.tallink.dto.ConferenceDto;
 import org.anup.tallink.dto.ConferenceRoomDto;
 import org.anup.tallink.dto.UpdateConferenceDto;
-import org.anup.tallink.entity.Conference;
-import org.anup.tallink.entity.ConferenceRoom;
-import org.anup.tallink.entity.ConferenceStatus;
-import org.anup.tallink.entity.RoomStatus;
+import org.anup.tallink.entity.*;
 import org.anup.tallink.exceptions.ConferenceNotFoundException;
 import org.anup.tallink.exceptions.InvalidRoomStatusException;
 import org.anup.tallink.exceptions.ResourceNotFoundException;
 import org.anup.tallink.repository.ConferenceRepository;
 import org.anup.tallink.repository.ConferenceRoomRepository;
+import org.anup.tallink.repository.ParticipantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +27,9 @@ public class ConferenceService {
 
     @Autowired
     private ConferenceRoomRepository conferenceRoomRepository;
+
+    @Autowired
+    private ParticipantRepository participantRepository;
 
     public ConferenceDto createConference(ConferenceDto conferenceDto) throws InvalidRoomStatusException {
         ConferenceRoom room = conferenceRoomRepository.findById(conferenceDto.getConferenceRoomId())
@@ -57,11 +59,25 @@ public class ConferenceService {
     }
 
     public ConferenceDto cancelConference(ConferenceDto conferenceDto) {
+        Conference conference = conferenceRepository.findById(conferenceDto.getConferenceRoomId())
+                .orElseThrow(() -> new IllegalArgumentException("Conference not found"));
+        if (conference.getDateTime().isBefore(LocalDateTime.now())) {
+            throw new IllegalStateException("Cannot cancel past conferences");
+        }
+        conference.setStatus(ConferenceStatus.CANCELED);
+        conferenceRepository.save(conference);
+        // Cancel all registrations for this conference
+        List<Participant> participants = participantRepository.findByConferenceId(conferenceDto.getConferenceRoomId());
+        participantRepository.deleteAll(participants);
         return null;
     }
 
     public List<AvailableConferenceDto> findAvailableConferences(AvailableConferenceDto availableConferenceDto) {
-        return null;
+        Conference conference = conferenceRepository.findById(availableConferenceDto.getConferenceId())
+                .orElseThrow(() -> new IllegalArgumentException("Conference not found"));
+        long participantCount = participantRepository.countByConferenceId(availableConferenceDto.getConferenceId());
+//        return participantCount < conference.getConferenceRoom().getMaxCapacity();
+        return List.of();
     }
 
     public ConferenceRoomDto updateConference(Long conferenceId, UpdateConferenceDto conferenceDto) {
@@ -71,15 +87,14 @@ public class ConferenceService {
             throw new ConferenceNotFoundException("Conference not found");
         }
 
-        if(conferenceDto.getDateTime() != null){
+        if (conferenceDto.getDateTime() != null) {
 
             conference.get().setDateTime(conferenceDto.getDateTime());
             Conference savedConference = conferenceRepository.save(conference.get());
 
             return convertRoomToDto(savedConference.getConferenceRoom());
-        }
-        else if (conferenceDto.getConferenceRoomId() != null && conferenceDto.getConferenceRoomId() >0) {
-            Optional<ConferenceRoom> room = conferenceRoomRepository.findByIdAndStatus(conferenceDto.getConferenceRoomId(),RoomStatus.AVAILABLE);
+        } else if (conferenceDto.getConferenceRoomId() != null && conferenceDto.getConferenceRoomId() > 0) {
+            Optional<ConferenceRoom> room = conferenceRoomRepository.findByIdAndStatus(conferenceDto.getConferenceRoomId(), RoomStatus.AVAILABLE);
             if (room.isEmpty()) {
                 throw new ResourceNotFoundException("Conference room not found");
             }
@@ -88,8 +103,7 @@ public class ConferenceService {
             room.get().setStatus(RoomStatus.BOOKED);
             Conference savedConference = conferenceRepository.save(conference.get());
             return convertRoomToDto(savedConference.getConferenceRoom());
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("Either date or conference room id should be provided");
         }
     }
