@@ -11,5 +11,5 @@ import java.util.List;
 @Repository
 public interface ConferenceRepository extends JpaRepository<Conference, Long> {
 
-    List<AvailableConferenceDto> findAvailableConferences(LocalDateTime startDateTime, LocalDateTime endDateTime);
+//    List<AvailableConferenceDto> findAvailableConferences(LocalDateTime startDateTime, LocalDateTime endDateTime);
 }

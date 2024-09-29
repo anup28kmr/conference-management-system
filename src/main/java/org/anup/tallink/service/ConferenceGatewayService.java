@@ -34,7 +34,8 @@ public class ConferenceGatewayService {
 
     // Find available conferences in the date-time range
     public List<AvailableConferenceDto> findAvailableConferences(LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        return conferenceRepository.findAvailableConferences(startDateTime, endDateTime);
+//        return conferenceRepository.findAvailableConferences(startDateTime, endDateTime);
+        return List.of();
     }
 
     // Self-registration for a conference
