@@ -26,5 +26,4 @@ public class Feedback {
     @Column(nullable = false)
     private String content;
 
-    // Getters and Setters
 }
