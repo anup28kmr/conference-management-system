@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/conferences")
+@RequestMapping("/api/conferences1")
 public class ConferenceGatewayController {
 
     @Autowired

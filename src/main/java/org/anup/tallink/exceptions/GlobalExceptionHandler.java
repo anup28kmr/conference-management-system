@@ -37,4 +37,19 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleInvalidParticipantFeedbackException(InvalidParticipantFeedbackException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(RoomAlreadyExistsException.class)
+    public ResponseEntity<String> handleRoomAlreadyExistsException(RoomAlreadyExistsException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidRoomStatusException.class)
+    public ResponseEntity<String> handleInvalidRoomStatusException(InvalidRoomStatusException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(ConferenceNotFoundException.class)
+    public ResponseEntity<String> handleConferenceNotFoundException(ConferenceNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
 }
